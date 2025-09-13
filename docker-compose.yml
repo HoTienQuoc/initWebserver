@@ -26,7 +26,6 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     networks:
       - laravel
-
   nginx:
     build:
       context: ./nginx
@@ -43,26 +42,32 @@ services:
       # - ./src:/usr/share/nginx/html
     networks:
       - laravel
-  # apache:
-  #   build:
-  #     context: ./apache
-  #     dockerfile: apache.dockerfile
-  #   image: httpd:2.4.65-alpine
-  #   container_name: apache
-  #   ports:
-  #     - 80:80
-  #     - 433:433
-  #   volumes:
-  #     - ./src:/var/www/html
-  #   networks:
-  #     - laravel
-
   composer:
     image: composer:latest
     container_name: composer
     volumes:
       - ./src:/var/www/html
     working_dir: /var/www/html
+    networks:
+      - laravel
+  artisan:
+    build:
+      context: ./php
+      dockerfile: php.dockerfile
+    container_name: artisan
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    entrypoint: ["php", "artisan"]
+    networks:
+      - laravel
+  npm:
+    image: node:current-alpine
+    container_name: npm
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    entrypoint: ["npm"]
     networks:
       - laravel
     
