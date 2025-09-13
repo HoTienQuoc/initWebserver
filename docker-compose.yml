@@ -15,6 +15,8 @@ services:
   mysql:
     image: mysql:9.4.0
     container_name: mysql
+    ports:
+      - 4306:3306
     environment:
       MYSQL_DATABASE: laravelDB
       MYSQL_USER: laravel
@@ -38,18 +40,18 @@ services:
       # - ./src:/usr/share/nginx/html
     networks:
       - laravel
-  apache:
-    build:
-      context: ./apache
-      dockerfile: apache.dockerfile
-    image: httpd:2.4.65-alpine
-    container_name: apache
-    ports:
-      - 80:80
-      - 433:433
-    volumes:
-      - ./src:/var/www/html
-    networks:
-      - laravel
+  # apache:
+  #   build:
+  #     context: ./apache
+  #     dockerfile: apache.dockerfile
+  #   image: httpd:2.4.65-alpine
+  #   container_name: apache
+  #   ports:
+  #     - 80:80
+  #     - 433:433
+  #   volumes:
+  #     - ./src:/var/www/html
+  #   networks:
+  #     - laravel
 
 
