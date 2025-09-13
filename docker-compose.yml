@@ -5,6 +5,9 @@ services:
   php:
     image: php:8.4.12-fpm-alpine
     container_name: php
+    build:
+      context: ./php
+      dockerfile: php.dockerfile
     volumes:
       - ./src:/var/www/html
     networks:
