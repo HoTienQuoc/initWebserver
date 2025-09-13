@@ -5,6 +5,8 @@ services:
   php:
     image: php:8.4.12-fpm-alpine
     container_name: php
+    volumes:
+      - ./src:/var/www/html
     networks:
       - laravel
   mysql:
@@ -33,17 +35,18 @@ services:
       # - ./src:/usr/share/nginx/html
     networks:
       - laravel
-  # apache:
-  #   build:
-  #     context: .
-  #     dockerfile: apache.dockerfile
-  #   container_name: apache
-  #   ports:
-  #     - 80:80
-  #     - 433:433
-  #   volumes:
-  #     - ./src:/var/www/html
-  #   networks:
-  #     - laravel
+  apache:
+    build:
+      context: ./apache
+      dockerfile: apache.dockerfile
+    image: httpd:2.4.65-alpine
+    container_name: apache
+    ports:
+      - 80:80
+      - 433:433
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - laravel
 
 
