@@ -3,11 +3,10 @@ networks:
     name: laravel
 services:
   php:
-    image: php:8.4.12-fpm-alpine
-    container_name: php
     build:
       context: ./php
       dockerfile: php.dockerfile
+    container_name: php
     volumes:
       - ./src:/var/www/html
     networks:
@@ -17,6 +16,8 @@ services:
     container_name: mysql
     ports:
       - 4306:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
     environment:
       MYSQL_DATABASE: laravelDB
       MYSQL_USER: laravel
@@ -30,8 +31,10 @@ services:
     build:
       context: ./nginx
       dockerfile: nginx.dockerfile
-    image: nginx:1.29.1-alpine-slim
     container_name: nginx
+    depends_on:
+      - php
+      - mysql
     ports:
       - 80:80
       - 433:433
@@ -53,5 +56,15 @@ services:
   #     - ./src:/var/www/html
   #   networks:
   #     - laravel
+
+  composer:
+    image: composer:latest
+    container_name: composer
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    networks:
+      - laravel
+    
 
 
