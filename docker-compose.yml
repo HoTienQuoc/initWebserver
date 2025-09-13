@@ -1,7 +1,49 @@
+networks:
+  laravel:
+    name: laravel
 services:
   php:
     image: php:8.4.12-fpm-alpine
+    container_name: php
+    networks:
+      - laravel
   mysql:
     image: mysql:9.4.0
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: laravelDB
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT: secret
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    networks:
+      - laravel
+
   nginx:
-    image: nginx:stable-alpine
+    build:
+      context: ./nginx
+      dockerfile: nginx.dockerfile
+    image: nginx:1.29.1-alpine-slim
+    container_name: nginx
+    ports:
+      - 80:80
+      - 433:433
+    volumes:
+      - ./src:/var/www/html
+      # - ./src:/usr/share/nginx/html
+    networks:
+      - laravel
+  # apache:
+  #   build:
+  #     context: .
+  #     dockerfile: apache.dockerfile
+  #   container_name: apache
+  #   ports:
+  #     - 80:80
+  #     - 433:433
+  #   volumes:
+  #     - ./src:/var/www/html
+  #   networks:
+  #     - laravel
+
+
